@@ -34,4 +34,14 @@ public class DataService
     {
         return db.Posts.Include(p => p.Comments).FirstOrDefault(p => p.Id == id);
     }
+    public Comment? CreateComment(int postId, string content, string author)
+    {
+        var post = db.Posts.Include(p => p.Comments).FirstOrDefault(p => p.Id == postId);
+        if (post == null) return null;
+
+        var comment = new Comment { Content = content, Author = author };
+        post.Comments.Add(comment);
+        db.SaveChanges();
+        return comment;
+    }
 }
