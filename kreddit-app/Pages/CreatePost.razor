@@ -38,7 +38,7 @@
             error = "Skriv enten tekst eller en URL.";
             return;
         }
-
+        
         var post = await apiService.CreatePost(title, content, string.IsNullOrWhiteSpace(link) ? null : link, author);
         nav.NavigateTo($"/post/{post.Id}");
     }

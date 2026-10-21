@@ -4,9 +4,6 @@
 @using shared.Model;
 @inject ApiService apiService
 
-@using Microsoft.Extensions.Configuration
-@inject IConfiguration Configuration
-
 @if (posts == null)
 {
     <p><em>Loading...</em></p>
@@ -16,18 +13,27 @@ else
     <table>
         <tr>
             <th>Title</th>
+            <th>Forfatter</th>
+            <th>Dato</th>
             <th>Content</th>
             <th colspan="3">Votes</th>
         </tr>
         @foreach (var post in posts)
         {
             <tr>
-                <!-- 
-                    These a href links will match the route in the page 'PostItem.razor'.
-                    The route is defined as "/post/{id}" and the id is the post id.
-                -->
                 <td><a href="/post/@post.Id">@post.Title</a></td>
-                <td>@post.Content</td>
+                <td>@post.Author</td>
+                <td>@post.Created.ToLocalTime().ToString("dd-MM-yyyy HH:mm")</td>
+                <td>
+                    @if (!string.IsNullOrWhiteSpace(post.Url))
+                    {
+                        <a href="@post.Url" target="_blank">@post.Url</a>
+                    }
+                    else
+                    {
+                        @post.Content
+                    }
+                </td>
                 <td>@(post.Upvotes - post.Downvotes)</td>
                 <td><button @onclick="() => Upvote(post.Id)">Upvote</button></td>
                 <td><button @onclick="() => Downvote(post.Id)">Downvote</button></td>
@@ -40,12 +46,12 @@ else
 
 @code {
     private Post[]? posts;
-    private Post? votePost;
 
     protected override async Task OnInitializedAsync()
     {
         posts = await apiService.GetPosts();
     }
+
     private async Task Upvote(int id)
     {
         var updated = await apiService.UpvotePost(id);

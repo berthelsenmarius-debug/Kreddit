@@ -28,14 +28,20 @@ else
 {
     <div class="contents">
         <h4>@Post.Title</h4>
-        
-        <p>@Post.Content</p>
+        <p><strong>Af @Post.Author, @Post.Created.ToLocalTime().ToString("dd-MM-yyyy HH:mm"), Votes: @(Post.Upvotes - Post.Downvotes)</strong></p>
+        @if (!string.IsNullOrWhiteSpace(Post.Url))
+        {
+            <p><a href="@Post.Url" target="_blank">@Post.Url</a></p>
+        }
+        @if (!string.IsNullOrWhiteSpace(Post.Content))
+        {
+            <p>@Post.Content</p>
+        }
         <p>
             <button @onclick="UpvotePost">Upvote</button>
             <button @onclick="DownvotePost">Downvote</button>
         </p>
     </div>
-
     <div class="contents">
     <h4>Comments</h4>
     <table>
@@ -49,8 +55,8 @@ else
         {
             <tr>
                 <td>@comment.Author</td>
+                <td>@comment.Created.ToLocalTime().ToString("dd-MM-yyyy HH:mm")</td>
                 <td>@comment.Content</td>
-                <td>@comment.Created</td>
                 <td>@(comment.Upvotes - comment.Downvotes)</td>
                 <td><button @onclick="() => Upvote(comment.Id)">Upvote</button></td>
                 <td><button @onclick="() => Downvote(comment.Id)">Downvote</button></td>
