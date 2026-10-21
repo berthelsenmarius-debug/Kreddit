@@ -44,4 +44,11 @@ public class DataService
         db.SaveChanges();
         return comment;
     }
+    public Post CreatePost(string title, string content, string? url, string author)
+    {
+        var post = new Post { Title = title, Content = content, Url = url, Author = author };
+        db.Posts.Add(post);
+        db.SaveChanges();
+        return post;
+    }
 }

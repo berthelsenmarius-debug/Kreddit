@@ -2,3 +2,10 @@ POST http://localhost:5252/api/posts/1/comments
 Content-Type: application/json
 
 { "content": "Min testkommentar", "author": "Marius" }
+
+###
+
+POST http://localhost:5252/api/posts
+Content-Type: application/json
+
+{ "title": "Testtråd", "content": "Hej fra test", "author": "Marius" }

@@ -1,0 +1,45 @@
+@page "/create"
+@using kreddit_app.Data
+@inject ApiService apiService
+@inject NavigationManager nav
+
+<PageTitle>Ny tråd</PageTitle>
+
+<a href="/">← Tilbage til forsiden</a>
+<h3>Opret ny tråd</h3>
+
+<p><input placeholder="Overskrift" @bind="title" @bind:event="oninput" /></p>
+<p><textarea placeholder="Tekst (eller skriv en URL herunder)" @bind="content" @bind:event="oninput"></textarea></p>
+<p><input placeholder="URL (eller skriv tekst ovenfor)" @bind="link" @bind:event="oninput" /></p>
+<p><input placeholder="Dit navn" @bind="author" @bind:event="oninput" /></p>
+<button type="button" @onclick="Create">Opret tråd</button>
+
+@if (error != null)
+{
+    <p style="color:red">@error</p>
+}
+
+@code {
+    private string title = "";
+    private string content = "";
+    private string link = "";
+    private string author = "";
+    private string? error;
+
+    private async Task Create()
+    {
+        if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(author))
+        {
+            error = "Skriv en overskrift og dit navn.";
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(content) && string.IsNullOrWhiteSpace(link))
+        {
+            error = "Skriv enten tekst eller en URL.";
+            return;
+        }
+
+        var post = await apiService.CreatePost(title, content, string.IsNullOrWhiteSpace(link) ? null : link, author);
+        nav.NavigateTo($"/post/{post.Id}");
+    }
+}

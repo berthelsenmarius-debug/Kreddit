@@ -30,7 +30,14 @@ public class ApiService
         string url = $"{baseAPI}posts/{id}/";
         return await http.GetFromJsonAsync<Post>(url);
     }
-
+    public async Task<Post> CreatePost(string title, string content, string? link, string author)
+    {
+        string endpoint = $"{baseAPI}posts";
+        HttpResponseMessage msg = await http.PostAsJsonAsync(endpoint, new { title, content, url = link, author });
+        msg.EnsureSuccessStatusCode();
+        return (await msg.Content.ReadFromJsonAsync<Post>())!;
+    }
+    
     public async Task<Comment> CreateComment(string content, int postId, string author)
     {
         string url = $"{baseAPI}posts/{postId}/comments";

@@ -52,6 +52,15 @@ app.MapPost("/api/posts/{id}/comments", (DataService service, int id, NewComment
     return comment is null ? Results.NotFound() : Results.Ok(comment);
 });
 
+app.MapPost("/api/posts", (DataService service, NewPostData data) =>
+{
+    if (string.IsNullOrWhiteSpace(data.Title) || string.IsNullOrWhiteSpace(data.Author))
+        return Results.BadRequest("Title and author are required");
+
+    var post = service.CreatePost(data.Title, data.Content ?? "", data.Url, data.Author);
+    return Results.Ok(post);
+});
 app.Run();
 
 record NewCommentData(string Content, string Author);
+record NewPostData(string Title, string? Content, string? Url, string Author);
