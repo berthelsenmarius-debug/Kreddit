@@ -4,3 +4,6 @@ obj/
 .idea/
 .DS_Store
 *.user
+*.db
+*.db-shm
+*.db-wal
