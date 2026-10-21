@@ -46,14 +46,17 @@ else
     {
         posts = await apiService.GetPosts();
     }
-
-    private async void Upvote(int id)
+    private async Task Upvote(int id)
     {
-        var updatedPost = await apiService.UpvotePost(id);
+        var updated = await apiService.UpvotePost(id);
+        var i = Array.FindIndex(posts!, p => p.Id == id);
+        if (i >= 0) posts![i] = updated;
     }
 
-    private async void Downvote(int id)
+    private async Task Downvote(int id)
     {
-        Console.WriteLine("Not implemented 😪");
+        var updated = await apiService.DownvotePost(id);
+        var i = Array.FindIndex(posts!, p => p.Id == id);
+        if (i >= 0) posts![i] = updated;
     }
 }

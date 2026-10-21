@@ -30,6 +30,10 @@ else
         <h4>@Post.Title</h4>
         
         <p>@Post.Content</p>
+        <p>
+            <button @onclick="UpvotePost">Upvote</button>
+            <button @onclick="DownvotePost">Downvote</button>
+        </p>
     </div>
 
     <div class="contents">
@@ -61,22 +65,39 @@ else
 }
 
 @code {
-    [Parameter]
-    public string Id { get; set; }
-    public int PostId { get { return int.Parse(Id); } }
-    public Post Post { get; set; }
+    [Parameter] public string Id { get; set; } = "";
+    public int PostId => int.Parse(Id);
+    public Post? Post { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         Post = await apiService.GetPost(PostId);
     }
-    private async void Upvote(int id)
+
+    private async Task UpvotePost()
     {
-        Console.WriteLine("Not implemented 😪");
+        var updated = await apiService.UpvotePost(PostId);
+        Post!.Upvotes = updated.Upvotes;
     }
 
-    private async void Downvote(int id)
+    private async Task DownvotePost()
     {
-        Console.WriteLine("Not implemented 😪");
+        var updated = await apiService.DownvotePost(PostId);
+        Post!.Downvotes = updated.Downvotes;
     }
+
+    private async Task Upvote(int id)
+    {
+        var updated = await apiService.UpvoteComment(id);
+        var comment = Post!.Comments.FirstOrDefault(c => c.Id == id);
+        if (comment != null) comment.Upvotes = updated.Upvotes;
+    }
+
+    private async Task Downvote(int id)
+    {
+        var updated = await apiService.DownvoteComment(id);
+        var comment = Post!.Comments.FirstOrDefault(c => c.Id == id);
+        if (comment != null) comment.Downvotes = updated.Downvotes;
+    }
+
 }

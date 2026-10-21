@@ -60,6 +60,31 @@ app.MapPost("/api/posts", (DataService service, NewPostData data) =>
     var post = service.CreatePost(data.Title, data.Content ?? "", data.Url, data.Author);
     return Results.Ok(post);
 });
+
+app.MapPut("/api/posts/{id}/upvote", (DataService service, int id) =>
+{
+    var post = service.VotePost(id, true);
+    return post is null ? Results.NotFound() : Results.Ok(post);
+});
+
+app.MapPut("/api/posts/{id}/downvote", (DataService service, int id) =>
+{
+    var post = service.VotePost(id, false);
+    return post is null ? Results.NotFound() : Results.Ok(post);
+});
+
+app.MapPut("/api/comments/{id}/upvote", (DataService service, int id) =>
+{
+    var comment = service.VoteComment(id, true);
+    return comment is null ? Results.NotFound() : Results.Ok(comment);
+});
+
+app.MapPut("/api/comments/{id}/downvote", (DataService service, int id) =>
+{
+    var comment = service.VoteComment(id, false);
+    return comment is null ? Results.NotFound() : Results.Ok(comment);
+});
+
 app.Run();
 
 record NewCommentData(string Content, string Author);

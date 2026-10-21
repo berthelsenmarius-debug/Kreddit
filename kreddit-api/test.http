@@ -9,3 +9,19 @@ POST http://localhost:5252/api/posts
 Content-Type: application/json
 
 { "title": "Testtråd", "content": "Hej fra test", "author": "Marius" }
+
+###
+
+PUT http://localhost:5252/api/posts/1/upvote
+
+###
+
+PUT http://localhost:5252/api/posts/1/downvote
+
+###
+
+PUT http://localhost:5252/api/comments/1/upvote
+
+###
+
+PUT http://localhost:5252/api/comments/1/downvote

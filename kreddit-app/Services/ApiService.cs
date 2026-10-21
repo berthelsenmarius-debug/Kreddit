@@ -57,22 +57,15 @@ public class ApiService
         return newComment;
     }
 
-    public async Task<Post> UpvotePost(int id)
+    public async Task<Post> UpvotePost(int id) => await Put<Post>($"posts/{id}/upvote");
+    public async Task<Post> DownvotePost(int id) => await Put<Post>($"posts/{id}/downvote");
+    public async Task<Comment> UpvoteComment(int id) => await Put<Comment>($"comments/{id}/upvote");
+    public async Task<Comment> DownvoteComment(int id) => await Put<Comment>($"comments/{id}/downvote");
+
+    private async Task<T> Put<T>(string path)
     {
-        string url = $"{baseAPI}posts/{id}/upvote/";
-
-        // Post JSON to API, save the HttpResponseMessage
-        HttpResponseMessage msg = await http.PutAsJsonAsync(url, "");
-
-        // Get the JSON string from the response
-        string json = msg.Content.ReadAsStringAsync().Result;
-
-        // Deserialize the JSON string to a Post object
-        Post? updatedPost = JsonSerializer.Deserialize<Post>(json, new JsonSerializerOptions {
-            PropertyNameCaseInsensitive = true // Ignore case when matching JSON properties to C# properties
-        });
-
-        // Return the updated post (vote increased)
-        return updatedPost;
+        HttpResponseMessage msg = await http.PutAsync($"{baseAPI}{path}", null);
+        msg.EnsureSuccessStatusCode();
+        return (await msg.Content.ReadFromJsonAsync<T>())!;
     }
 }

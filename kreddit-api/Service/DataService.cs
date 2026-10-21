@@ -51,4 +51,28 @@ public class DataService
         db.SaveChanges();
         return post;
     }
+    
+    public Post? VotePost(int id, bool up)
+    {
+        var post = db.Posts.FirstOrDefault(p => p.Id == id);
+        if (post == null) return null;
+
+        if (up) post.Upvotes++;
+        else post.Downvotes++;
+
+        db.SaveChanges();
+        return post;
+    }
+
+    public Comment? VoteComment(int id, bool up)
+    {
+        var comment = db.Comments.FirstOrDefault(c => c.Id == id);
+        if (comment == null) return null;
+
+        if (up) comment.Upvotes++;
+        else comment.Downvotes++;
+
+        db.SaveChanges();
+        return comment;
+    }
 }
